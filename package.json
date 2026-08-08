@@ -1,0 +1,14 @@
+{
+  "name": "x-keep-focus",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal MV3 Chrome extension to block distracting sites and keep you focused.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.9"
+  }
+}
