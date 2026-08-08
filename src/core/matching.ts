@@ -89,7 +89,11 @@ function escapeRegex(value: string): string {
   return value.replace(REGEX_SPECIALS, "\\$&");
 }
 
-function blockPath(host: string): string {
+/**
+ * Extension-root-relative path of the block page for a given blocked host,
+ * carrying that host in the `blocked` query parameter the block page reads.
+ */
+export function blockPagePath(host: string): string {
   return `${BLOCK_PAGE_PATH}?blocked=${encodeURIComponent(host)}`;
 }
 
@@ -102,7 +106,10 @@ function redirectRule(
   return {
     id,
     priority: 1,
-    action: { type: "redirect", redirect: { extensionPath: blockPath(host) } },
+    action: {
+      type: "redirect",
+      redirect: { extensionPath: blockPagePath(host) },
+    },
     condition,
   };
 }
@@ -147,4 +154,36 @@ export function buildRules(
     id++;
   }
   return rules;
+}
+
+/** An open browser tab, reduced to the fields relevant to redirection. */
+export interface OpenTab {
+  id: number;
+  url: string;
+}
+
+/** A tab that should be navigated to the block page, and where to send it. */
+export interface TabRedirect {
+  tabId: number;
+  /** Extension-root-relative block-page path (see {@link blockPagePath}). */
+  path: string;
+}
+
+/**
+ * Given the open tabs and the blocklist, decide which tabs are currently
+ * sitting on a listed site and where each should be redirected. Used when the
+ * global toggle flips on: declarativeNetRequest only fires on new navigations,
+ * so already-loaded tabs must be redirected explicitly. Each tab yields at most
+ * one redirect (its first matching entry); tabs on no listed site are omitted.
+ */
+export function tabsToRedirect(
+  tabs: readonly OpenTab[],
+  blocklist: Blocklist,
+): TabRedirect[] {
+  const redirects: TabRedirect[] = [];
+  for (const tab of tabs) {
+    const entry = blocklist.find((candidate) => matches(tab.url, candidate));
+    if (entry) redirects.push({ tabId: tab.id, path: blockPagePath(entry.host) });
+  }
+  return redirects;
 }
