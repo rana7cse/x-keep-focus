@@ -10,3 +10,7 @@ dist/
 *.log
 .idea/
 .vscode/
+
+# Vendored agent/skill tooling — not maintained by this project.
+.agents/skills/
+.claude/skills/
