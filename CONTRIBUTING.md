@@ -1,0 +1,58 @@
+# Contributing
+
+Thanks for helping on x-keep-focus. This project is small and deliberately
+simple — the goal of these notes is to keep it that way.
+
+Read [CODING_STANDARDS.md](CODING_STANDARDS.md) first; it defines how code should
+be written. This file covers the *workflow* around it.
+
+## How work is organised
+
+Work is tracked as **GitHub Issues**, sliced into small, self-contained tickets
+that each cut a complete path through the extension. A short spec issue describes
+the whole feature; individual tickets hang off it with `Blocked by` dependencies.
+
+- Tickets labelled **`ready-for-agent`** are fully specified and ready to pick up.
+- A ticket can start only when the issues it is **Blocked by** are closed.
+- Pick from the *frontier* — tickets whose blockers are all done.
+
+See [`docs/agents/`](docs/agents/) for the issue-tracker, triage-label, and
+domain-doc conventions this repo follows.
+
+## Development setup
+
+Requires Node.js 20+.
+
+```bash
+npm install   # dev dependencies only (Vitest)
+npm test      # run the suite
+```
+
+The extension has no build step: load the repository folder unpacked from
+`chrome://extensions` (see the [README](README.md)) and use the reload button to
+pick up changes.
+
+## Making a change
+
+1. **Branch** off `main`. Name it after the ticket, e.g. `ticket-3-core-module`.
+2. **Work test-first at the core seam** where practical: put logic in `src/`,
+   cover it in `tests/`, keep the Chrome shells thin.
+3. **Run `npm test`** — it must be green.
+4. For UI or blocking changes, **verify manually in Chrome**: load unpacked,
+   reload the extension, and exercise the behaviour (the popup, a blocked
+   navigation, the block page). Note what you checked in the PR.
+5. **Commit** using the conventional-commit style from the coding standards, and
+   reference the ticket (`Closes #NN`).
+
+## Pull requests
+
+- Open a PR against `main`; keep it scoped to a single ticket.
+- In the description, summarise what the ticket delivers, note how you verified
+  it (tests + manual steps), and link the issue it closes.
+- Make sure `npm test` passes and there are no `chrome://extensions` load errors.
+- A two-axis review (standards + spec) is run on the change before merge.
+
+## Reporting issues
+
+Open a GitHub issue describing the problem, the steps to reproduce, and what you
+expected. New, unscoped reports start as `needs-triage`.
