@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Test / build output
+coverage/
+dist/
+
+# OS / editor
+.DS_Store
+*.log
