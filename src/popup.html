@@ -12,6 +12,30 @@
       <header class="popup__header">
         <h1 class="popup__title">x-keep-focus</h1>
       </header>
+
+      <section class="add" aria-label="Add a site to the block list">
+        <button type="button" class="add__current" id="add-current">
+          + Add current site
+        </button>
+        <form class="add__form" id="add-form">
+          <input
+            type="text"
+            class="add__input"
+            id="host-input"
+            placeholder="Add a site (e.g. youtube.com)"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Site to block"
+          />
+          <button type="submit" class="add__submit">Add</button>
+        </form>
+        <p class="add__error" id="error" role="alert" hidden></p>
+      </section>
+
+      <ul class="list" id="list"></ul>
+      <p class="empty" id="empty" hidden>
+        No sites blocked yet. Add one above to start staying focused.
+      </p>
     </main>
   </body>
 </html>
