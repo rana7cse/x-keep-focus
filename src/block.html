@@ -9,9 +9,23 @@
   </head>
   <body>
     <main class="block">
+      <div class="block__mark" aria-hidden="true">
+        <svg viewBox="0 0 128 128" width="56" height="56">
+          <circle
+            cx="64"
+            cy="64"
+            r="40"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="10"
+          />
+          <circle cx="64" cy="64" r="14" fill="currentColor" />
+        </svg>
+      </div>
       <h1 class="block__title">Stay focused.</h1>
-      <p class="block__message">This site is on your block list.</p>
+      <p class="block__focus" id="focus"></p>
       <p class="block__domain" id="domain" hidden></p>
+      <a class="block__back" id="go-back" href="#">← Go back</a>
     </main>
   </body>
 </html>
