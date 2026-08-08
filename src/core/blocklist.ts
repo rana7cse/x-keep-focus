@@ -26,7 +26,8 @@ export function addEntry(
   hostOnly = false,
 ): AddResult {
   const host = normalizeHost(input);
-  if (host === "") return { ok: false, blocklist: [...blocklist], error: "invalid" };
+  if (host === "")
+    return { ok: false, blocklist: [...blocklist], error: "invalid" };
   if (blocklist.some((entry) => entry.host === host)) {
     return { ok: false, blocklist: [...blocklist], error: "duplicate" };
   }

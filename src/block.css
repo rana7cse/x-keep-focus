@@ -37,7 +37,13 @@ body {
   min-height: 100vh;
   padding: 24px;
   font-family:
-    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
   color: var(--fg);
   background: radial-gradient(
     120% 120% at 50% 0%,
