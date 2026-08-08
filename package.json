@@ -5,10 +5,14 @@
   "description": "Minimal MV3 Chrome extension to block distracting sites and keep you focused.",
   "type": "module",
   "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "typescript": "^5.6.3",
     "vitest": "^2.1.9"
   }
 }

@@ -24,23 +24,26 @@ domain-doc conventions this repo follows.
 Requires Node.js 20+.
 
 ```bash
-npm install   # dev dependencies only (Vitest)
-npm test      # run the suite
+npm install       # dev dependencies only (TypeScript, Vitest)
+npm run build     # compile src/ -> dist/
+npm run typecheck # type-check without emitting
+npm test          # run the suite
 ```
 
-The extension has no build step: load the repository folder unpacked from
-`chrome://extensions` (see the [README](README.md)) and use the reload button to
-pick up changes.
+The extension is written in TypeScript and compiled to `dist/`. Load the
+**`dist/`** folder unpacked from `chrome://extensions` (see the
+[README](README.md)); after changing source, re-run `npm run build` and hit the
+reload button to pick up changes.
 
 ## Making a change
 
 1. **Branch** off `main`. Name it after the ticket, e.g. `ticket-3-core-module`.
-2. **Work test-first at the core seam** where practical: put logic in `src/`,
+2. **Work test-first at the core seam** where practical: put logic in `src/core/`,
    cover it in `tests/`, keep the Chrome shells thin.
-3. **Run `npm test`** — it must be green.
-4. For UI or blocking changes, **verify manually in Chrome**: load unpacked,
-   reload the extension, and exercise the behaviour (the popup, a blocked
-   navigation, the block page). Note what you checked in the PR.
+3. **Run `npm test` and `npm run typecheck`** — both must be green.
+4. For UI or blocking changes, **verify manually in Chrome**: `npm run build`,
+   load `dist/` unpacked (or reload it), and exercise the behaviour (the popup, a
+   blocked navigation, the block page). Note what you checked in the PR.
 5. **Commit** using the conventional-commit style from the coding standards, and
    reference the ticket (`Closes #NN`).
 
@@ -49,7 +52,8 @@ pick up changes.
 - Open a PR against `main`; keep it scoped to a single ticket.
 - In the description, summarise what the ticket delivers, note how you verified
   it (tests + manual steps), and link the issue it closes.
-- Make sure `npm test` passes and there are no `chrome://extensions` load errors.
+- Make sure `npm test` and `npm run typecheck` pass, and there are no
+  `chrome://extensions` load errors after `npm run build`.
 - A two-axis review (standards + spec) is run on the change before merge.
 
 ## Reporting issues

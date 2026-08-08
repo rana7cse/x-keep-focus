@@ -6,17 +6,25 @@ when a rule and readability genuinely conflict, favour readability and note why.
 
 ## Language & tooling
 
-- **Vanilla JS, ES modules.** No framework, no bundler, no transpiler. The
-  shipped extension must run as-is when loaded unpacked.
+- **TypeScript, ES modules, `strict` mode.** No framework, no bundler. Source
+  lives in `src/`; `tsc` compiles it to `dist/`, which is what loads unpacked.
 - **No runtime dependencies.** `package.json` may only carry **dev** dependencies
-  (the test runner). If you reach for a runtime dependency, stop and reconsider.
-- **No build step.** Source files are the deployed files. Don't introduce a
-  compile/bundle stage.
-- **Node 20+** is the development baseline (used only for tests).
+  (TypeScript, the test runner). If you reach for a runtime dependency, stop and
+  reconsider.
+- **Minimal build only.** `npm run build` = `tsc` + an asset-copy step; no
+  bundler, no transpile magic beyond `tsc`. `dist/` is generated and git-ignored
+  — never edit or commit it.
+- **NodeNext module resolution.** Relative imports in source use the `.js`
+  extension (e.g. `import { matches } from "./matching.js"`), which `tsc`
+  resolves to the `.ts` file and emits correctly.
+- **Type the domain.** Prefer explicit types/interfaces for domain concepts
+  (a blocklist entry, a rule) over loose object shapes. Avoid `any`; if
+  unavoidable, isolate it and comment why.
+- **Node 20+** is the development baseline (used only to build and test).
 
 ## Architecture: the core seam
 
-- **Keep all testable logic in the Chrome-independent core** under `src/` —
+- **Keep all testable logic in the Chrome-independent core** under `src/core/` —
   URL normalization, match semantics, and rule building. This module **must not
   reference `chrome.*`** or any browser global.
 - **Chrome shells stay thin.** `background.js`, `popup.js`, and `block.js` read
@@ -26,9 +34,11 @@ when a rule and readability genuinely conflict, favour readability and note why.
   `chrome.storage.sync`. Derive blocking rules from storage on change; don't keep
   a second, separately-mutated copy.
 
-## JavaScript
+## TypeScript
 
 - Use `const` by default, `let` only when reassigning; never `var`.
+- Let inference do the work for locals; annotate function signatures and exported
+  types explicitly so the module's contract is readable.
 - Prefer small pure functions with descriptive names. A name that doesn't reveal
   what the function does is a design smell — rename it.
 - Fail loudly on programmer error; handle expected runtime conditions (bad user
@@ -69,7 +79,7 @@ when a rule and readability genuinely conflict, favour readability and note why.
   calls, tests need **no mocks**.
 - Cover the interesting cases, including negative and look-alike ones (e.g.
   `notyoutube.com` must not match `youtube.com`), not just the happy path.
-- `npm test` must be green before a PR is opened.
+- Both `npm test` and `npm run typecheck` must be green before a PR is opened.
 
 ## Commits
 

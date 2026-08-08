@@ -11,25 +11,28 @@ A minimal [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/)
 - **Whole-domain or host-only** matching per entry (subdomains included by default).
 - **Calm block page** — a fixed encouraging headline, a rotating focus line, and the blocked domain; auto light/dark.
 - **Syncs** across your signed-in Chrome browsers via `chrome.storage.sync`.
-- **No build step, no runtime dependencies** — plain HTML/CSS/JS.
+- **TypeScript, no runtime dependencies** — a lightweight build (`tsc` + an asset copy) compiles `src/` into a loadable `dist/`.
 
 ## Install (load unpacked)
 
-1. Open `chrome://extensions`.
-2. Enable **Developer mode** (top right).
-3. Click **Load unpacked** and select this repository folder.
-4. The target icon appears to the right of the address bar; click it to open the popup.
+1. Build the extension: `npm install && npm run build` (produces `dist/`).
+2. Open `chrome://extensions`.
+3. Enable **Developer mode** (top right).
+4. Click **Load unpacked** and select the **`dist/`** folder.
+5. The target icon appears to the right of the address bar; click it to open the popup.
 
-To pick up local changes, hit the reload ↻ button on the extension card in `chrome://extensions`.
+To pick up local changes, re-run `npm run build`, then hit the reload ↻ button on the extension card in `chrome://extensions`.
 
 ## Development
 
-Requires [Node.js](https://nodejs.org/) 20+. The extension itself ships no dependencies; Node is only used for the test suite.
+Requires [Node.js](https://nodejs.org/) 20+. The shipped extension has no runtime dependencies; Node and the dev dependencies (TypeScript, Vitest) are used only to build and test.
 
 ```bash
-npm install      # install dev dependencies (Vitest)
-npm test         # run the test suite once
-npm run test:watch  # re-run on change
+npm install         # install dev dependencies (TypeScript, Vitest)
+npm run build       # compile src/ -> dist/ (the loadable extension)
+npm run typecheck   # type-check without emitting
+npm test            # run the test suite once
+npm run test:watch  # re-run tests on change
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and [CODING_STANDARDS.md](CODING_STANDARDS.md) for the conventions.
@@ -37,23 +40,33 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and [CODING_STANDARDS.md
 ## Project structure
 
 ```
-manifest.json        MV3 manifest (extension entry point)
-popup.html/.css/.js  Toolbar popup: toggle + blocklist management
-block.html/.css/.js  The page shown when a site is blocked
-background.js        Service worker: builds & applies blocking rules
-src/                 Chrome-independent core logic (the tested seam)
-icons/               Toolbar icon (SVG source + generated PNGs)
-tests/               Vitest suite
+src/
+  manifest.json        MV3 manifest (extension entry point)
+  popup.html/.css      Toolbar popup markup + styles
+  popup.ts             Popup logic (toggle + blocklist management)
+  block.html/.css      Block page markup + styles
+  block.ts             Block page logic
+  background.ts        Service worker: builds & applies blocking rules
+  core/                Chrome-independent core logic (the tested seam)
+  icons/               Toolbar icon (SVG source + generated PNGs)
+dist/                  Built, loadable extension (generated; git-ignored)
+tests/                 Vitest suite
+scripts/copy-assets.mjs  Copies static assets from src/ into dist/
+tsconfig*.json           TypeScript config (editor/typecheck + build)
 ```
 
 ## Architecture
 
 All of the risky logic — URL normalization, match semantics, and turning the
 blocklist into blocking rules — lives in a single **Chrome-independent core
-module** under `src/`. It contains no `chrome.*` calls, so it can be unit-tested
-directly with no browser mocks. Everything Chrome-specific (the service worker,
-popup, and block page) is a thin shell that reads storage, calls the core module,
-and hands the result to the Chrome APIs.
+module** under `src/core/`. It contains no `chrome.*` calls, so it can be
+unit-tested directly with no browser mocks. Everything Chrome-specific (the
+service worker, popup, and block page) is a thin shell that reads storage, calls
+the core module, and hands the result to the Chrome APIs.
+
+The build is deliberately minimal: `tsc` compiles the TypeScript in `src/` to
+`dist/`, then `scripts/copy-assets.mjs` copies the static files (manifest, HTML,
+CSS, icons) alongside it. There is no bundler.
 
 This "one seam" design is deliberate: matching bugs are exactly where a site
 blocker fails, and concentrating that logic behind one tested boundary keeps it
