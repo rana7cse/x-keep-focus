@@ -9,7 +9,12 @@ import {
   normalizeHost,
   type BlockEntry,
 } from "./core/index.js";
-import { getBlocklist, setBlocklist } from "./storage.js";
+import {
+  getBlocklist,
+  setBlocklist,
+  getEnabled,
+  setEnabled,
+} from "./storage.js";
 
 let state: BlockEntry[] = [];
 
@@ -23,6 +28,13 @@ const listEl = () => el<HTMLUListElement>("list");
 const emptyEl = () => el<HTMLParagraphElement>("empty");
 const errorEl = () => el<HTMLParagraphElement>("error");
 const hostInput = () => el<HTMLInputElement>("host-input");
+const enabledInput = () => el<HTMLInputElement>("enabled");
+const enabledLabel = () => el<HTMLSpanElement>("enabled-label");
+
+function reflectEnabled(enabled: boolean): void {
+  enabledInput().checked = enabled;
+  enabledLabel().textContent = enabled ? "On" : "Off";
+}
 
 function showError(message: string): void {
   const node = errorEl();
@@ -104,6 +116,13 @@ async function currentTabHost(): Promise<string> {
 async function init(): Promise<void> {
   state = await getBlocklist();
   render();
+  reflectEnabled(await getEnabled());
+
+  enabledInput().addEventListener("change", () => {
+    const enabled = enabledInput().checked;
+    reflectEnabled(enabled);
+    void setEnabled(enabled);
+  });
 
   el<HTMLButtonElement>("add-current").addEventListener("click", () => {
     void (async () => {
