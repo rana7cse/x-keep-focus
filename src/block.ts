@@ -1,12 +1,24 @@
-// Block page shell. Placeholder for now — ticket #6 makes it beautiful (fixed
-// headline + rotating focus line). It reads the blocked host that buildRules
-// passes as the `blocked` query parameter and shows which site was intercepted.
+// Block page shell: shows a rotating focus line and the blocked domain (from the
+// `blocked` query parameter buildRules attaches), and wires the "Go back" link.
+// All copy/selection logic lives in core; this file only touches the DOM.
 
-const blocked = new URLSearchParams(location.search).get("blocked");
-if (blocked) {
-  const domain = document.getElementById("domain");
-  if (domain) {
-    domain.textContent = `Blocked: ${blocked}`;
-    domain.hidden = false;
-  }
+import { normalizeHost, pickFocusLine } from "./core/index.js";
+
+const focus = document.getElementById("focus");
+if (focus) focus.textContent = pickFocusLine();
+
+const domainName = normalizeHost(
+  new URLSearchParams(location.search).get("blocked") ?? "",
+);
+const domain = document.getElementById("domain");
+if (domain && domainName !== "") {
+  domain.textContent = domainName;
+  domain.hidden = false;
 }
+
+// "Go back" returns to the previous page — never forward into the blocked site.
+const back = document.getElementById("go-back");
+back?.addEventListener("click", (event) => {
+  event.preventDefault();
+  history.back();
+});
