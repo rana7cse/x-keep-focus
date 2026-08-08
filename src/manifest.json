@@ -3,6 +3,7 @@
   "name": "x-keep-focus",
   "version": "0.1.0",
   "description": "Minimal site blocker to keep you focused.",
+  "permissions": ["storage", "activeTab"],
   "action": {
     "default_popup": "popup.html",
     "default_title": "x-keep-focus",
