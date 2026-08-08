@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Minimal MV3 Chrome extension to block distracting sites and keep you focused.",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist",

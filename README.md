@@ -1,5 +1,12 @@
 # x-keep-focus
 
+[![CI](https://github.com/rana7cse/x-keep-focus/actions/workflows/ci.yml/badge.svg)](https://github.com/rana7cse/x-keep-focus/actions/workflows/ci.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Chrome Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 A minimal [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/) Chrome extension that blocks distracting sites so you can stay focused. Keep a personal blocklist, flip a single toggle to enter "focus mode," and any listed site redirects to a calm block page instead of pulling you in.
 
 > Status: in active development. See the [issues](https://github.com/rana7cse/x-keep-focus/issues) for the current roadmap.
@@ -74,4 +81,4 @@ correct while the shells stay simple.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) if present, otherwise all rights reserved by the author.
+[MIT](LICENSE) © rana7cse
