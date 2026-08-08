@@ -183,7 +183,8 @@ export function tabsToRedirect(
   const redirects: TabRedirect[] = [];
   for (const tab of tabs) {
     const entry = blocklist.find((candidate) => matches(tab.url, candidate));
-    if (entry) redirects.push({ tabId: tab.id, path: blockPagePath(entry.host) });
+    if (entry)
+      redirects.push({ tabId: tab.id, path: blockPagePath(entry.host) });
   }
   return redirects;
 }

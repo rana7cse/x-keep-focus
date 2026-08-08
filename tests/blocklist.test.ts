@@ -42,7 +42,10 @@ describe("addEntry", () => {
   it("appends to an existing list", () => {
     const result = addEntry([entry("youtube.com")], "reddit.com");
     expect(result.ok).toBe(true);
-    expect(result.blocklist).toEqual([entry("youtube.com"), entry("reddit.com")]);
+    expect(result.blocklist).toEqual([
+      entry("youtube.com"),
+      entry("reddit.com"),
+    ]);
   });
 
   it("does not mutate the input list", () => {

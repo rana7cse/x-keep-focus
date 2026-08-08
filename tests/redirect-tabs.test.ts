@@ -13,7 +13,9 @@ const list: Blocklist = [
 
 describe("blockPagePath", () => {
   it("builds an extension-relative path carrying the blocked host", () => {
-    expect(blockPagePath("youtube.com")).toBe("/block.html?blocked=youtube.com");
+    expect(blockPagePath("youtube.com")).toBe(
+      "/block.html?blocked=youtube.com",
+    );
   });
 
   it("url-encodes the host", () => {
@@ -23,7 +25,9 @@ describe("blockPagePath", () => {
 
 describe("tabsToRedirect", () => {
   it("redirects a tab sitting on a listed site to the block page", () => {
-    const tabs: OpenTab[] = [{ id: 7, url: "https://www.youtube.com/watch?v=1" }];
+    const tabs: OpenTab[] = [
+      { id: 7, url: "https://www.youtube.com/watch?v=1" },
+    ];
     expect(tabsToRedirect(tabs, list)).toEqual([
       { tabId: 7, path: blockPagePath("youtube.com") },
     ]);

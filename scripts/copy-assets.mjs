@@ -1,7 +1,7 @@
 // Copies the extension's static assets (everything under src/ that isn't
 // TypeScript) into dist/, preserving directory structure. Run after `tsc`
 // so dist/ ends up a complete, loadable unpacked extension.
-import { cp, rm, mkdir, readdir } from "node:fs/promises";
+import { cp, mkdir, readdir } from "node:fs/promises";
 import { join, extname } from "node:path";
 
 const SRC = "src";

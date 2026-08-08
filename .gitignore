@@ -8,3 +8,5 @@ dist/
 # OS / editor
 .DS_Store
 *.log
+.idea/
+.vscode/

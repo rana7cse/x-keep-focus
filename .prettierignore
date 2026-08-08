@@ -1,0 +1,8 @@
+dist/
+coverage/
+node_modules/
+package-lock.json
+
+# Vendored agent/skill tooling — not maintained by this project.
+.agents/
+.claude/
